@@ -8,6 +8,7 @@ import java.util.Map;
 class Solution1 {
     // https://leetcode.cn/problems/find-all-anagrams-in-a-string/
 
+
     public List<Integer> findAnagrams(String s, String p) {
         Map<String,List<Integer>> map=new HashMap<>();
 
