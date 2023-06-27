@@ -1,5 +1,7 @@
 ### 数组
 
+`int[] arr = new int[length]{var1,var2} `
+
 ### 二分查找
 
 - 704  简单  
@@ -608,9 +610,11 @@
                 // 那么可能的就是将当前窗口从左往右赶 左边慢慢加一 当前小窗口的左边界向右移动
                 // accb bca 
                 // 那么很明显答案是 bca
-                while(left<=right && formed==required){
+                while(formed==required){
     
-                    // 循环里面更新最小值 以及 当前窗口的左边界
+                  	// 如果有最小值
+                    // 循环里面更新最小值 以及 
+                    // 当前窗口的左边界
                     if(right-left+1<minLen){
                         minLen=right-left+1;
                         minLeft=left;
@@ -640,5 +644,133 @@
     }
     ```
     
+  - 59. 螺旋矩阵 II
+  
+    给你一个正整数 `n` ，生成一个包含 `1` 到 `n2` 所有元素，且元素按顺时针顺序螺旋排列的 `n x n` 正方形矩阵 `matrix` 。
+  
+    ```java
+    class Solution {
+        public int[][] generateMatrix(int n) {
+            // 既然螺旋矩阵 顺时针 那就四个边 上下左右 一个边 一个边的进行 
     
+            int left=0;
+            int right=n-1;
+            int up=0;
+            int down=n-1;
+    
+            // 当前初始值
+            // 初始值为1 从1开始
+            int current=1;
+    
+            // 结果矩阵数组
+            int[][] result=new int[n][n];
+    
+            // 循环条件
+            while(current<=n*n){
+                // 要考虑到下次循环
+    
+    
+                // 行 列
+    
+    
+                // 最上面
+                for(int i=left;i<=right;i++){
+                    result[up][i]=current++;
+                }
+                up++; //伴随着上面变化
+    
+    
+                // 最右边
+                for(int i=up;i<=down;i++){
+                    result[i][right]=current++;
+                }
+                right--;
+    
+    
+                // 最下面
+                for(int i=right;i>=left;i--){
+                    result[down][i]=current++;
+                }
+                down--;
+    
+    
+                // 最左边
+                for(int i=down;i>=up;i--){
+                    result[i][left]=current++;
+                }
+                left++;
+            }
+            return result;
+        }
+    }
+    ```
+  
+    
+  
+    - 
+  
+    #### [54. 螺旋矩阵](https://leetcode.cn/problems/spiral-matrix/)
+  
+    给你一个 `m` 行 `n` 列的矩阵 `matrix` ，请按照 **顺时针螺旋顺序** ，返回矩阵中的所有元素。
+  
+    ```java
+    class Solution {
+        public List<Integer> spiralOrder(int[][] matrix) {
+    
+            int m=matrix.length;
+            int n=matrix[0].length;
+    
+            // 上面那个是n*n 矩阵 方形 这个是不规则 
+            int left=0;
+            int right=n-1;
+    
+            int up=0;
+            int down=m-1;
+    
+            // 从1开始 判断次数
+            int index=1;
+    
+            // 循环的次数
+            int max=m*n;
+    
+            List<Integer> resultList=new ArrayList<>();
+    
+    
+                // 能够取到等于值这块
+                while(index<=max){
+    
+                // 每次都要判断是否越界
+                for(int i=left;i<=right && index<=max ;i++){
+                    resultList.add(matrix[up][i]);
+                    index++;
+                }
+                up++;
+    
+                for(int i=up;i<=down && index<=max;i++){
+                    resultList.add(matrix[i][right]);
+                    index++;
+                }
+                right--;
+    
+                for(int i=right;i>=left && index<=max ;i--){
+                    resultList.add(matrix[down][i]);
+                    index++;
+                }
+                down--;
+    
+    
+                for(int i=down;i>=up && index<=max ;i--){
+                    resultList.add(matrix[i][left]);
+                    index++;
+                }
+    
+                left++;
+            }
+            return resultList;
+        }
+    }
+    
+    ```
+  
+  - 
 
