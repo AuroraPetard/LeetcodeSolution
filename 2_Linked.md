@@ -386,7 +386,7 @@ class Solution {
   }
   ```
   
-  非递归
+  非递归    
   
   ```java
   /**
@@ -401,42 +401,176 @@ class Solution {
    */
   class Solution {
       public ListNode swapPairs(ListNode head) {
-          // 非递归版本
-          // 使用哑节点
           
-          // 定义哑节点  下一个节点指向head  并让prev=dummy 
-          // 定义的节点 dummy head 不能动 定义一个变量代替它动
-          ListNode dummy=new ListNode(0,head);
+        	// 相当于指向头节点 不能随便动 要不然找不到了 
+         // 所以下面找了个变量替代它前行
+          ListNode dummy=new ListNode(-1,head);
           ListNode prev=dummy;
-  
-  
-          
           
           while(head!=null && head.next!=null){
-              // 节点示意图
-              // prev head  2 3
-  
-              
-             ListNode first=head;
-             ListNode second=head.next;
               
               
-              // 如上图进行交换
+              // prev head(first) second  second.next
+              // 相邻的两两交换 12 34 56
+              
+              ListNode first=head;
+              ListNode second=head.next;
+              
               prev.next=second;
               head.next=second.next;
               second.next=head;
               
-              
-              // 更迭变量
               prev=head;
               head=head.next;
-              
           }
+          return dummy.next;
+      }
+  }
+  ```
+  
+  #### [19. 删除链表的倒数第 N 个结点](https://leetcode.cn/problems/remove-nth-node-from-end-of-list/)
+  
+  给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。
+  
+  ```java
+  /**
+   * Definition for singly-linked list.
+   * public class ListNode {
+   *     int val;
+   *     ListNode next;
+   *     ListNode() {}
+   *     ListNode(int val) { this.val = val; }
+   *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+   * }
+   */
+  class Solution {
+      public ListNode removeNthFromEnd(ListNode head, int n) {
+          // 双指针 快慢指针经典应用
+          // 先让快指针走n步 然后快慢指针在同时一起走 
+          // 当快指针走到头了 所在的位置就是带删除的位置
+          // 当然需要知道当前删除节点的前一个节点
+          
+          // 使用dummy 便于统一操作
+          ListNode dummy=new ListNode(-1,head);
+          
+          // dummy不能动 使用 变量替它负重前行
+          ListNode fast=dummy;
+          ListNode slow=dummy;
+          
+          while(n-->0){
+              fast=fast.next;
+          }
+          
+          
+          // 定义一个变量用来保存带删除节点的前一个节点
+          ListNode prev=null;
+          
+          while(fast!=null){
+              prev=slow;
+              slow=slow.next;
+              fast=fast.next;
+          }
+          
+          
+          prev.next=slow.next;
           
           return dummy.next;
       }
   }
   ```
   
-  
+- #### [160. 相交链表](https://leetcode.cn/problems/intersection-of-two-linked-lists/)
 
+  给你两个单链表的头节点 `headA` 和 `headB` ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 `null` 。
+
+  ```java
+  要找到两个单链表的相交节点，可以使用双指针的方法。假设链表 A 的长度为 m，链表 B 的长度为 n。如果两个链表相交，相交节点之后的长度是相同的。如果不相交，则相交节点之后的长度是不同的。
+  
+  我们可以使用两个指针 pA 和 pB，分别指向链表 A 和链表 B 的头节点。然后让它们同时向后移动，当一个指针到达链表的末尾时，将其重定向到另一个链表的头节点。这样，两个指针移动的总距离就相等了。如果存在相交节点，它们将在某个时刻相遇；如果不存在相交节点，它们将同时到达链表的末尾，此时它们都为 null。
+  
+    /**
+   * Definition for singly-linked list.
+   * public class ListNode {
+   *     int val;
+   *     ListNode next;
+   *     ListNode(int x) {
+   *         val = x;
+   *         next = null;
+   *     }
+   * }
+   */
+  public class Solution {
+      public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+          
+          if(headA==null || headB==null){
+              return null;
+          }
+          
+          ListNode pA=headA;
+          ListNode pB=headB;
+          
+          while(pA!=pB){
+              pA= pA!=null ? pA.next : headB;
+              pB= pB!=null ? pB.next : headA;
+          }
+          return pA;
+      }
+  }
+  ```
+
+  #### [142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/)
+
+  给定一个链表的头节点  `head` ，返回链表开始入环的第一个节点。 *如果链表无环，则返回 `null`。*
+
+  ```java
+  /**
+   * Definition for singly-linked list.
+   * class ListNode {
+   *     int val;
+   *     ListNode next;
+   *     ListNode(int x) {
+   *         val = x;
+   *         next = null;
+   *     }
+   * }
+   */
+  public class Solution {
+      public ListNode detectCycle(ListNode head) {
+          
+          // 使用快慢指针来解决
+          // 如果有环 那么快慢指针终会相遇
+          // 快指针走两步 慢指针走一步 如果相遇 那么有环
+          // 然后定义一个detect节点从head节点出发 
+          // detect和slow相遇的就是环形入口
+          
+          ListNode slow = head;
+          ListNode fast = head;
+  
+          // null.next 空指针
+          // 判断是否存在环
+          while (fast != null && fast.next != null) {
+              slow = slow.next;
+              fast = fast.next.next;
+              if (slow == fast) {
+                  break;
+              }
+          }
+  
+          if (fast == null || fast.next == null) {
+              // 不存在环
+              return null;
+          }
+  
+          // 重新定义一个指针，与慢指针同时向后移动，直到相遇
+          ListNode detect = head;
+          while (detect != slow) {
+              detect = detect.next;
+              slow = slow.next;
+          }
+  
+          return detect;
+      }
+  }
+  ```
+
+  
