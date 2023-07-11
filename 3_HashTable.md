@@ -287,3 +287,193 @@ class Solution {
 }
 ```
 
+#### [349. 两个数组的交集](https://leetcode.cn/problems/intersection-of-two-arrays/)
+
+给定两个数组 `nums1` 和 `nums2` ，返回 *它们的交集* 。输出结果中的每个元素一定是 **唯一** 的。我们可以 **不考虑输出结果的顺序** 。
+
+使用数组来作为hash表的前提是数据量少 可控 比如小写字母 只有26个所以使用数组表示hash正合适
+
+如果数据量分散跨度大 就不合适了 
+
+此时可以考虑使用set hashset 
+
+```java
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        // 唯一的 不考虑顺序 那不就是set吗
+        
+        //定义两个set 一个用来做初始化
+        // 一个用来做最后结果
+        Set<Integer> tmp=new HashSet<>();
+        Set<Integer> resultSet=new HashSet<>();
+        
+        
+        // 先把num1放入set中
+        for(int i:nums1){
+            tmp.add(i);
+        }
+        
+        
+        // 遍历num2 判断是否在num1 也就是 是否conntains
+        for(int i:nums2){
+            if(tmp.contains(i)){
+                resultSet.add(i);
+            }
+        }
+        
+        // 现在结果集是个set 返回结果是int[]
+        // 现在需要把set转化成int[]
+        
+        // lambda
+        // return resSet.stream().mapToInt(x -> x).toArray();
+        
+        // 定义一个结果数组
+        int[] resultArr=new int[resultSet.size()];
+        
+
+        // 不会定义个变量吗？？？
+        int j=0;
+        for(int i:resultSet){
+            resultArr[j++]=i;
+        }
+        
+        return resultArr;
+        
+    }
+}
+```
+
+#### [202. 快乐数](https://leetcode.cn/problems/happy-number/)
+
+编写一个算法来判断一个数 `n` 是不是快乐数。
+
+**「快乐数」** 定义为：
+
+- 对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和。
+- 然后重复这个过程直到这个数变为 1，也可能是 **无限循环** 但始终变不到 1。
+- 如果这个过程 **结果为** 1，那么这个数就是快乐数。
+
+如果 `n` 是 *快乐数* 就返回 `true` ；不是，则返回 `false` 。
+
+```java
+// 无限循环 
+// 判断一个数是否存在用hash 
+// hash包括 数组 hashset hashmap 选择用哪个
+
+class Solution {
+    public boolean isHappy(int n) {
+        
+    Set<Integer> set=new HashSet<>();
+    
+        
+    // 如果n=1 为快乐数 
+    // 如果有重复 那么不是快乐数
+    while(n!=1 &&!set.contains(n)){
+        set.add(n);
+        n=getNext(n);
+    }
+        
+        return n==1;
+    
+    }
+    
+    
+    // 每次从个位数平方相加
+    public int getNext(int n){
+        int res=0;
+        
+        // 每次取整最后会变成0
+        while(n>0){
+            // 这里是获取的个位数
+            int cur=n%10;
+            
+            res+=cur*cur;
+            
+            // 去除个位数
+            n=n/10;
+        }
+        
+        return res;
+    }
+    
+    
+    
+}
+```
+
+#### [1. 两数之和](https://leetcode.cn/problems/two-sum/)
+
+给定一个整数数组 `nums` 和一个整数目标值 `target`，请你在该数组中找出 **和为目标值** *`target`* 的那 **两个** 整数，并返回它们的数组下标。
+
+你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。
+
+你可以按任意顺序返回答案。
+
+<font color='red'> 两数之和 梦开始的地方</font>
+
+```java
+// 判断一个数 是否存在一个集合中 使用map
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        // 为什么用map
+        // 判断是否存在
+        Map<Integer,Integer> map=new HashMap<>();
+        
+        for(int i=0;i<nums.length;i++){
+            if(map.containsKey(target-nums[i])){
+                return new int[]{i,map.get(target-nums[i])};
+            }
+            map.put(nums[i],i);
+        }
+        return new int[]{-1,-1};
+    } 
+}
+```
+
+#### [454. 四数相加 II](https://leetcode.cn/problems/4sum-ii/)
+
+给你四个整数数组 `nums1`、`nums2`、`nums3` 和 `nums4` ，数组长度都是 `n` ，请你计算有多少个元组 `(i, j, k, l)` 能满足：
+
+- `0 <= i, j, k, l < n`
+- `nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0`
+
+```java
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        // 只能两两相加 判断
+        
+        // 两两相加 求和 
+        // 然后在剩下的两两相加 看看map中有没有对应的其负值
+        
+        // map 保留数 还咬保留其次数
+        
+        Map<Integer,Integer> map=new HashMap<>();
+        
+        
+        // 最后的次数
+        int count=0;
+        
+        for(int i=0;i<nums1.length;i++){
+            for(int j=0;j<nums2.length;j++){
+                int value=nums1[i]+nums2[j];
+                map.put(value,map.getOrDefault(value,0)+1);
+            }
+        }
+        
+        
+        for(int i=0;i<nums3.length;i++){
+            for(int j=0;j<nums4.length;j++){
+                
+                // 此处是专门求的负值
+                // 看看map里面有没有这个值
+                int value=-(nums3[i]+nums4[j]);
+                count+=map.getOrDefault(value,0);
+                
+                
+            }
+        }
+        return count;
+    }
+}
+```
+
