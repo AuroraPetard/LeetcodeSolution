@@ -1,5 +1,13 @@
 哈希表 一般用的最多的就是HashMap 
 
+包括 
+
+数组  小写字母 数量有限可以使用
+
+set 数量无限 
+
+HashMap 既要key 又要value
+
 <font color='red'>遇到需要快速判断一个元素是否出现在集合中 需要考虑使用hashmap</font>
 
 #### [242. 有效的字母异位词](https://leetcode.cn/problems/valid-anagram/)
@@ -133,6 +141,62 @@ class Solution {
     }
 }
 ```
+
+```java
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        // 分组 相同的放一块  相同key value
+        // 那么用map
+        // 相同的key是什么呢 字母以为 词频相同那么就用词频zuokey
+        
+        Map<String,List<String>> map=new HashMap<>();
+        
+        for(String str:strs){
+            
+            
+            String key=str2key(str);
+            
+            List<String> list=map.getOrDefault(key,new ArrayList<String>());
+            
+            list.add(str);
+            
+            map.put(key,list);
+            
+        }
+        
+        return new ArrayList<List<String>>(map.values());
+        
+    }
+    
+    
+    public String str2key(String str){
+        int[] count=new int[26];
+        StringBuffer sb=new StringBuffer();
+        
+        
+        for(char ch:str.toCharArray()){
+            count[ch-'a']++;
+        }
+ 
+        
+        for(int i=0;i<26;i++){
+            if(count[i]!=0){
+                sb.append(i+'a');
+                sb.append(count[i]);
+            }
+        }
+        
+        
+        
+        return sb.toString();
+        
+ 
+    }
+    
+}
+```
+
+
 
 #### [438. 找到字符串中所有字母异位词](https://leetcode.cn/problems/find-all-anagrams-in-a-string/)
 
@@ -473,6 +537,165 @@ class Solution {
             }
         }
         return count;
+    }
+}
+```
+
+#### [15. 三数之和](https://leetcode.cn/problems/3sum/)
+
+给你一个整数数组 `nums` ，判断是否存在三元组 `[nums[i], nums[j], nums[k]]` 满足 `i != j`、`i != k` 且 `j != k` ，同时还满足 `nums[i] + nums[j] + nums[k] == 0` 。请
+
+你返回所有和为 `0` 且不重复的三元组。
+
+**注意：**答案中不可以包含重复的三元组。
+
+```java
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        // 双指针 让三个数降维成两个数
+        // 对数组进行排序
+        // 先确定第一个数i 然后定义left=i+1 right=nums.length-1;
+        
+        // sum=nums[i]+nums[left]+nums[right]
+        
+        // 因为已经提前排好序了
+        
+        //if nums[i] >0 return false
+        
+        // sum >0 right--
+        // sum <0 left++
+        // sum =0 符合条件相加
+        
+        
+      
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(nums);
+        
+        // 因为已经排好序了 如果第一个最小的都>0 那么肯定后面的和无法=0
+        if(nums[0]>0){
+            return result;
+        }
+        
+        for(int i=0;i<nums.length;i++){
+            
+            //固定一个然后去找剩下的两个
+            
+            if(i>0 && nums[i]==nums[i-1]){
+                continue;
+            }
+            
+            int left=i+1;
+            int right=nums.length-1;
+            
+            while(left<right){
+                int sum=nums[i]+nums[left]+nums[right];
+                if(sum>0){
+                    right--;
+                }else if(sum<0){
+                    left++;
+                }else{
+                    result.add(Arrays.asList(nums[i],nums[left],nums[right]));
+                    
+        
+                    while(left<right && nums[left] == nums[left+1]){
+                        left++;
+                    }
+                    
+                    while(left<right && nums[right] == nums[right-1]){
+                        right--;
+                    }
+                    
+                           
+                    
+                    left++;
+                    right--;
+                }
+            }
+            
+        }
+        return result;
+        
+    }
+}
+```
+
+
+
+#### [18. 四数之和](https://leetcode.cn/problems/4sum/)
+
+给你一个由 `n` 个整数组成的数组 `nums` ，和一个目标值 `target` 。请你找出并返回满足下述全部条件且**不重复**的四元组 `[nums[a], nums[b], nums[c], nums[d]]` （若两个四元组元素一一对应，则认为两个四元组重复）：
+
+- `0 <= a, b, c, d < n`
+- `a`、`b`、`c` 和 `d` **互不相同**
+- `nums[a] + nums[b] + nums[c] + nums[d] == target`
+
+你可以按 **任意顺序** 返回答案 。
+
+```java
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // 两数之和 用map
+        // 三数之和用双指针
+        // 四数之和在三数的基础上在添加一层for循环
+        
+        List<List<Integer>> result=new ArrayList<>();
+        
+        Arrays.sort(nums);
+        
+        if(nums[0]>target){
+            return result;
+        }
+        
+        
+        
+        for(int i=0;i<nums.length;i++){
+            
+            if(i>0 && nums[i-1]==nums[i]){
+                continue;
+            }
+            
+            
+            // 不能有重复的 所以是从i+1 开始的
+            for(int j=i+1;j<nums.length;j++){
+                if(j>i+1 && nums[j-1]==nums[j]){
+                    continue;
+                }
+                
+                
+                int left=j+1;
+                int right=nums.length-1;
+                
+                while(left<right){
+                    long sum=(long)nums[i]+nums[j]+nums[left]+nums[right];
+                    if(sum>target){
+                        right--;
+                    }else if(sum<target){
+                        left++;
+                    }else{
+                        result.add(Arrays.asList(nums[i],nums[j],nums[left],nums[right]));
+                        
+                        while(left < right && nums[left]==nums[left+1]){
+                            left++;
+                        }
+                        
+                        while(left < right && nums[right]==nums[right-1]){
+                            right--;
+                        }
+                        
+                        
+                        
+                        
+                        
+                        left++;
+                        right--;
+                    }
+                }
+                
+            }
+            
+        }
+        return result;
+        
     }
 }
 ```
