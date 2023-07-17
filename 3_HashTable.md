@@ -566,6 +566,8 @@ class Solution {
         // sum <0 left++
         // sum =0 符合条件相加
         
+      // 在解决这个问题的过程中，跳过重复的数是为了避免得到重复的解
+      // 重复的数 会得到重复的解
         
       
         List<List<Integer>> result = new ArrayList<>();
@@ -596,7 +598,7 @@ class Solution {
                 }else{
                     result.add(Arrays.asList(nums[i],nums[left],nums[right]));
                     
-        
+        						// 跳过left right重复
                     while(left<right && nums[left] == nums[left+1]){
                         left++;
                     }
